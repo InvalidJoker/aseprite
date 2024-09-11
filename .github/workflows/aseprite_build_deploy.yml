@@ -5,6 +5,7 @@ on:
 
 env:
   BUILD_TYPE: Release
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
   
 jobs:
   check-version:
@@ -16,9 +17,6 @@ jobs:
       should_build: ${{ steps.should_build.outputs.should_build }}
       upload_url: ${{ steps.create_release.outputs.upload_url }}
     steps:
-    - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
-      id: ACTIONS_ALLOW_UNSECURE_COMMANDS
-      run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
     - name: Get latest version info
       id: version_info
       run: |
@@ -53,6 +51,8 @@ jobs:
     needs: check-version
     if: ${{ needs.check-version.outputs.should_build }}
     runs-on: ${{ matrix.os }}
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     strategy:
        matrix:
          os: [windows-latest]
